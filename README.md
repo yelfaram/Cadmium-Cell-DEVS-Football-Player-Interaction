@@ -21,15 +21,15 @@ To run the project, run:
 ```
 
 ## Testing Individual Actions
-1. To test the short passing action on a 3x3 grid:
+1. To test the short passing action on a 3x3 grid, run:
 ```sh
 ./bin/football_pitch config/3x3_player_short_pass_config.json
 ```
-2. To test the dribbling action on a 3x3 grid:
+2. To test the dribbling action on a 3x3 grid, run:
 ```sh
 ./bin/football_pitch config/3x3_player_dribble_config.json
 ```
-3. To test the long passing action on a 3x3 grid:
+3. To test the long passing action on a 3x3 grid, run:
 ```sh
 ./bin/football_pitch config/3x3_player_long_pass_config.json
 ```
