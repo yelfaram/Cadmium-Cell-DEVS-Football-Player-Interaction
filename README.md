@@ -37,4 +37,4 @@ To run the project, run:
 ## Output Files
 Any output generated during the simulation will be saved as a CSV file called grid_log.csv.
 
-To view any output file visually, use the Cell-DEVS Viewer[https://devssim.carleton.ca/cell-devs-viewer/]. Simply upload the grid_log.csv file along with the corresponding configuration JSON file that was used to generate it.
+To view any output file visually, use the [Cell-DEVS Viewer](https://devssim.carleton.ca/cell-devs-viewer/). Simply upload the grid_log.csv file along with the corresponding configuration JSON file that was used to generate it.
