@@ -1,0 +1,124 @@
+{
+  "scenario": {
+    "shape": [3, 3],
+    "origin": [0, 0],
+    "wrapped": false
+  },
+  "cells": {
+    "default": {
+      "delay": "transport",
+      "model": "player",
+      "state": {
+        "has_player": false,
+        "has_ball": false,
+        "mental": 50.0,
+        "fatigue": 0.0,
+        "action": "None",
+        "direction": "None",
+        "inactive_time": 0
+      },
+      "neighborhood": [{ "type": "von_neumann", "range": 1 }]
+    },
+    "player_1": {
+      "state": {
+        "has_player": true,
+        "has_ball": false,
+        "mental": 50.0,
+        "fatigue": 0.0,
+        "action": "None",
+        "direction": "None",
+        "inactive_time": 0
+      },
+      "cell_map": [[2, 0]]
+    },
+    "player_2": {
+      "state": {
+        "has_player": true,
+        "has_ball": true,
+        "mental": 55.0,
+        "fatigue": 35.0,
+        "action": "None",
+        "direction": "None",
+        "inactive_time": 0
+      },
+      "cell_map": [[2, 1]]
+    },
+    "player_3": {
+      "state": {
+        "has_player": true,
+        "has_ball": false,
+        "mental": 80.0,
+        "fatigue": 10.0,
+        "action": "None",
+        "direction": "None",
+        "inactive_time": 0
+      },
+      "cell_map": [[2, 2]]
+    }
+  },
+  "viewer": [
+    {
+      "colors": [
+        [0, 0, 0],
+        [255, 0, 0]
+      ],
+      "breaks": [0, 0.5, 1],
+      "field": "has_player"
+    },
+    {
+      "colors": [
+        [0, 0, 0],
+        [0, 0, 255]
+      ],
+      "breaks": [0, 0.5, 1],
+      "field": "has_ball"
+    },
+    {
+      "colors": [
+        [0, 0, 0],
+        [128, 128, 128],
+        [255, 255, 0]
+      ],
+      "breaks": [0, 33, 66, 100],
+      "field": "mental"
+    },
+    {
+      "colors": [
+        [0, 0, 0],
+        [128, 128, 128],
+        [255, 255, 0]
+      ],
+      "breaks": [0, 33, 66, 100],
+      "field": "fatigue"
+    },
+    {
+      "colors": [
+        [0, 0, 0],
+        [64, 64, 64],
+        [128, 128, 128],
+        [192, 192, 192],
+        [255, 192, 192]
+      ],
+      "breaks": [0, 1, 2, 3, 4, 5],
+      "field": "action"
+    },
+    {
+      "colors": [
+        [0, 0, 0],
+        [64, 64, 64],
+        [128, 128, 128],
+        [192, 192, 192]
+      ],
+      "breaks": [0, 1, 2, 3, 4],
+      "field": "direction"
+    },
+    {
+      "colors": [
+        [0, 0, 0],
+        [255, 0, 0]
+      ],
+      "breaks": [0, 0.5, 1],
+      "field": "inactive_time"
+    }
+  ]
+}
