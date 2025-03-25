@@ -20,8 +20,8 @@ struct playerState {
 
 //! It prints the state variables of the cell in an output stream
 std::ostream& operator<<(std::ostream& os, const playerState& x) {
-    // os << "{has_player: " << ((x.has_player) ? 1 : 0) << ", has_ball: " << ((x.has_ball) ? 1 : 0) << ", mental: " << x.mental << ", fatigue: " << x.fatigue << ", action: " << x.action << ", direction: " << x.direction << ", inactive_time: " << x.inactive_time << "}";
-    os << "<" << ((x.has_player) ? 1 : 0) << "," << ((x.has_ball) ? 1 : 0) << "," << x.mental << "," << x.fatigue << "," << x.action << "," << x.direction << "," << x.inactive_time << ">";
+    // os << "{has_player: " << ((x.has_player) ? 1 : 0) << ", has_ball: " << ((x.has_ball) ? 1 : 0) << ", mental: " << x.mental << ", fatigue: " << x.fatigue << ", action: " << x.action << ", direction: " << x.direction << ", inactive_time: " << x.inactive_time << "}"; // use this output if you want clarity on the grid log csv file
+    os << "<" << ((x.has_player) ? 1 : 0) << "," << ((x.has_ball) ? 1 : 0) << "," << x.mental << "," << x.fatigue << "," << x.action << "," << x.direction << "," << x.inactive_time << ">";  // use this output when you need to use the Cell-DEVS viewer
     return os;
 }
 
