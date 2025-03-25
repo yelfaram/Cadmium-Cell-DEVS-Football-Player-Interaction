@@ -49,8 +49,28 @@ To test individual components of the system (such as substitution logic and play
 ./bin/football_player_interaction config/3x3_player_long_pass_config.json
 ```
 
-## Output Files
+## Output Files .csv
 
 Any output generated during the simulation will be saved as a CSV file called `grid_log.csv`.
 
 To view any output file visually, use the [Cell-DEVS Viewer](https://devssim.carleton.ca/cell-devs-viewer/). Simply upload the `grid_log.csv` file along with the corresponding configuration JSON file that was used to generate it.
+
+## Video Files .webm
+
+The recorded simulation videos demonstrate different scenarios using the Cell-DEVS Football Player Interaction Model. Each video corresponds to a specific action: short pass, long pass, dribble, and full 10×10 grid gameplay.
+
+### How to Interpret the Simulations
+
+The Cell-DEVS Viewer displays a 3×3 grid, for the current implementation, where the most important cells to observe are:
+
+- Top-left cell: Represents the player (red when present).
+- Top-middle cell: Represents the ball (blue when present).
+
+### Action-Specific Observations
+
+- Short Pass: The ball moves left or right between positions.
+- Long Pass: The ball moves up or down between positions.
+- Dribble: The player and ball move together, with occasional movement from neighboring players in the same direction.
+- 10×10 Simulation: Expands the same behaviors observed in the 3×3 grid to a larger field.
+
+For better clarity, playback speed should be slowed down while viewing the videos.
