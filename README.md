@@ -29,7 +29,7 @@ To test the entire simulation on a 10x10 grid, run:
 
 ## Testing Actions
 
-You can test each specific action (short pass, dribble, and long pass) by executing the following:
+You can test each specific action (short pass, dribble, and long pass) by running the following:
 
 - To test the short passing action on a 3x3 grid:
 
