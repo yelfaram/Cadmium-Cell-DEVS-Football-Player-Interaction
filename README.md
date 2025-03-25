@@ -29,7 +29,7 @@ To test the entire simulation on a 10x10 grid, run:
 
 ## Testing Actions
 
-To test individual components of the system (such as substitution logic and player models), navigate to the `bin` directory and run:
+You can test each specific action (short pass, dribble, and long pass) by executing the following:
 
 - To test the short passing action on a 3x3 grid:
 
