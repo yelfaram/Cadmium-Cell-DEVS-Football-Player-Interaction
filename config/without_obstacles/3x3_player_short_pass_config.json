@@ -15,8 +15,9 @@
         "near_obstacle": false,
         "mental": 50.0,
         "fatigue": 0.0,
-        "action": "None",
-        "direction": "None",
+        "action": 0,
+        "direction": 0,
+        "zone_type": 0,
         "inactive_time": 0
       },
       "neighborhood": [{ "type": "von_neumann", "range": 1 }]
@@ -29,8 +30,9 @@
         "near_obstacle": false,
         "mental": 50.0,
         "fatigue": 0.0,
-        "action": "None",
-        "direction": "None",
+        "action": 0,
+        "direction": 0,
+        "zone_type": 0,
         "inactive_time": 0
       },
       "cell_map": [[2, 0]]
@@ -43,8 +45,9 @@
         "near_obstacle": false,
         "mental": 30.0,
         "fatigue": 35.0,
-        "action": "None",
-        "direction": "None",
+        "action": 0,
+        "direction": 0,
+        "zone_type": 0,
         "inactive_time": 0
       },
       "cell_map": [[2, 1]]
@@ -57,8 +60,9 @@
         "near_obstacle": false,
         "mental": 30.0,
         "fatigue": 35.0,
-        "action": "None",
-        "direction": "None",
+        "action": 0,
+        "direction": 0,
+        "zone_type": 0,
         "inactive_time": 0
       },
       "cell_map": [[2, 2]]
@@ -124,6 +128,11 @@
       "colors": [[0, 0, 0]],
       "breaks": [0, 1],
       "field": "direction"
+    },
+    {
+      "colors": [[0, 0, 0]],
+      "breaks": [0, 1],
+      "field": "zone_type"
     },
     {
       "colors": [
