@@ -16,7 +16,8 @@ struct playerState {
     double fatigue;         // tracks player fatigue level [0, 100] -> 100 indicates high exhaustion
     Action action;          // tracks player performed actions
     Direction direction;    // tracks direction of action
-    ZoneType zone_type;              
+    ZoneType zone_type;     // tracks type of zone player belongs to [NONE, DEFENSE, MIDFIELD, ATTACK]
+    int initial_row;        // track original row for player cells         
     int inactive_time;      // tracks how long cell was inactive
 
     //! Default constructor function
@@ -30,13 +31,14 @@ struct playerState {
         action(Action::NONE), 
         direction(Direction::NONE), 
         zone_type(ZoneType::NONE),
+        initial_row(0),
         inactive_time(0) {}
 };
 
 //! It prints the state variables of the cell in an output stream
 std::ostream& operator<<(std::ostream& os, const playerState& x) {
-    os << "{has_player: " << ((x.has_player) ? 1 : 0) << ", has_ball: " << ((x.has_ball) ? 1 : 0) << ", has_obstacle: " << ((x.has_obstacle) ? 1 : 0) << ", near_obstacle: " << ((x.near_obstacle) ? 1 : 0) << ", mental: " << x.mental << ", fatigue: " << x.fatigue << ", action: " << x.action << ", direction: " << x.direction << ", zone_type: " << x.zone_type << ", inactive_time: " << x.inactive_time << "}"; // use this output if you want clarity on the grid log csv file
-    // os << "<" << ((x.has_player) ? 1 : 0) << "," << ((x.has_ball) ? 1 : 0) << "," << ((x.has_obstacle) ? 1 : 0) << "," << ((x.near_obstacle) ? 1 : 0) << "," << x.mental << "," << x.fatigue << "," << x.action << "," << x.direction << "," << x.zone_type << "," << x.inactive_time << ">";  // use this output when you need to use the Cell-DEVS viewer
+    os << "{has_player: " << ((x.has_player) ? 1 : 0) << ", has_ball: " << ((x.has_ball) ? 1 : 0) << ", has_obstacle: " << ((x.has_obstacle) ? 1 : 0) << ", near_obstacle: " << ((x.near_obstacle) ? 1 : 0) << ", mental: " << x.mental << ", fatigue: " << x.fatigue << ", action: " << x.action << ", direction: " << x.direction << ", zone_type: " << x.zone_type << ", initial_row: " << x.initial_row << ", inactive_time: " << x.inactive_time << "}"; // use this output if you want clarity on the grid log csv file
+    // os << "<" << ((x.has_player) ? 1 : 0) << "," << ((x.has_ball) ? 1 : 0) << "," << ((x.has_obstacle) ? 1 : 0) << "," << ((x.near_obstacle) ? 1 : 0) << "," << x.mental << "," << x.fatigue << "," << x.action << "," << x.direction << "," << x.zone_type << "," << x.initial_row << "," << x.inactive_time << ">";  // use this output when you need to use the Cell-DEVS viewer
     return os;
 }
 
@@ -74,6 +76,7 @@ void from_json(const nlohmann::json& j, playerState& s) {
     s.direction = Direction::NONE;
     
     j.at("zone_type").get_to(s.zone_type);
+    j.at("initial_row").get_to(s.initial_row);
     j.at("inactive_time").get_to(s.inactive_time);
 }
 

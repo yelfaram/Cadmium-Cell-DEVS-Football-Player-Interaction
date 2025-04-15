@@ -67,6 +67,8 @@ class player : public GridCell<playerState, double> {
 
         double source_mental = 50.0;
         double source_fatigue = 0.0;
+        int source_initial_row = 0;
+        ZoneType source_zone_type = ZoneType::NONE;
 
         // Relative Neighbor Constants
         const std::vector<int> NORTH = {-1, 0};             // North neighbor (i-1, j)
@@ -139,7 +141,9 @@ class player : public GridCell<playerState, double> {
                 // get source player metrics for inheritance by new cell
                 if (flags.dribble_from_north || flags.move_from_north) {
                     source_mental = nState->mental;   
-                    source_fatigue = nState->fatigue;  
+                    source_fatigue = nState->fatigue;
+                    source_initial_row = nState->initial_row;
+                    source_zone_type = nState->zone_type;
                 }
             }
             else if (relativePos == WEST) {
@@ -169,7 +173,9 @@ class player : public GridCell<playerState, double> {
                 // get source player metrics for inheritance by new cell
                 if (flags.dribble_from_south || flags.move_from_south) {
                     source_mental = nState->mental;   
-                    source_fatigue = nState->fatigue;  
+                    source_fatigue = nState->fatigue;
+                    source_initial_row = nState->initial_row;
+                    source_zone_type = nState->zone_type;  
                 }
             }
             else if (relativePos == NORTH_EXTENDED) {
@@ -266,19 +272,23 @@ class player : public GridCell<playerState, double> {
             state.has_player = false;
         };
 
-        auto applyBecomePlayerFromDribblePlusCost = [&state, source_mental, source_fatigue]() { // use lambda to capture reference to playerState and source attributes
+        auto applyBecomePlayerFromDribblePlusCost = [&state, source_mental, source_fatigue, source_initial_row, source_zone_type]() { // use lambda to capture reference to playerState and source attributes
             state.has_player = true;
             state.has_ball = true;
             // Inherit player attributes from source and apply action cost (mental/fatigue fluctuations)
             state.mental = source_mental - 3.0;
             state.fatigue = source_fatigue + 7.0;
+            state.initial_row = source_initial_row;
+            state.zone_type = source_zone_type;
         };
 
-        auto applyBecomePlayerFromMovePlusCost = [&state, source_mental, source_fatigue]() { // use lambda to capture reference to playerState
+        auto applyBecomePlayerFromMovePlusCost = [&state, source_mental, source_fatigue, source_initial_row, source_zone_type]() { // use lambda to capture reference to playerState
             state.has_player = true;
             // inherit player attributes from source and apply action cost (mental/fatigue fluctuations)
             state.mental = source_mental - 2.0;
             state.fatigue = source_fatigue + 5.0;
+            state.initial_row = source_initial_row;
+            state.zone_type = source_zone_type;
         };
 
         auto applyGetBallFromShortPassPlusCost = [&state]() { // use lambda to capture reference to playerState

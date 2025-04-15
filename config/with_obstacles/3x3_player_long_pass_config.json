@@ -18,6 +18,7 @@
         "action": 0,
         "direction": 0,
         "zone_type": 0,
+        "initial_row": 0,
         "inactive_time": 0
       },
       "neighborhood": [{ "type": "von_neumann", "range": 2 }]
@@ -33,6 +34,7 @@
         "action": 0,
         "direction": 0,
         "zone_type": 0,
+        "initial_row": 2,
         "inactive_time": 0
       },
       "cell_map": [[2, 1]]
@@ -48,6 +50,7 @@
         "action": 0,
         "direction": 0,
         "zone_type": 0,
+        "initial_row": 0,
         "inactive_time": 0
       },
       "cell_map": [[1, 1]]
@@ -63,6 +66,7 @@
         "action": 0,
         "direction": 0,
         "zone_type": 0,
+        "initial_row": 0,
         "inactive_time": 0
       },
       "cell_map": [[0, 1]]
