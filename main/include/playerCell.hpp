@@ -15,6 +15,15 @@ struct NeighborFlags {
     bool north_empty = false;                   // check if north cell (i-1, j) empty   
     bool south_empty = false;                   // check if south cell (i+1, j) empty
 
+    // check for obstacle
+    bool obstacle_interception = false;         // check if north or south neighbors are obstacles (can intercept long pass)
+
+    // check for neighbor being near an obstacle
+    bool near_west_obstacle = false;
+    bool near_east_obstacle = false;
+    bool near_north_obstacle = false;
+    bool near_south_obstacle = false;
+
     // check for teammate
     bool west_teammate = false;                 // check if west cell (i, j-1) has player
     bool east_teammate = false;                 // check if east cell (i, j+1) has player
@@ -72,12 +81,12 @@ class player : public GridCell<playerState, double> {
         //////////////////////////////////////////////////////////////
         // Helper functions (for data collection)
         //////////////////////////////////////////////////////////////
+        auto isEmpty = [](const std::shared_ptr<const playerState>& s) {
+            return (!s->has_player) && (!s->has_ball) && (!s->has_obstacle);
+        };
+        
         auto isTeammate = [](const std::shared_ptr<const playerState>& s) {
             return (s->has_player) && (!s->has_ball);
-        };
-
-        auto isEmpty = [](const std::shared_ptr<const playerState>& s) {
-            return (!s->has_player) && (!s->has_ball);
         };
 
         auto isShortPassFromDirection = [](const std::shared_ptr<const playerState>& s, Direction d) {
@@ -149,7 +158,6 @@ class player : public GridCell<playerState, double> {
             else if (relativePos == SOUTH) {
                 // check north cell emptiness (to dribble/move backward)
                 flags.south_empty = isEmpty(nState);
-
                 // check for direct south teammate
                 flags.south_teammate = isTeammate(nState);
                 // if my direct south neighbor has an action to long pass to north (me) then i should receive ball
@@ -177,10 +185,38 @@ class player : public GridCell<playerState, double> {
                 flags.extended_long_pass_from_south = isLongPassFromDirection(nState, Direction::NORTH);    // Neighbor cell performs long pass
             }
 
-            // East or west neighbor performs a dribble (to allow for move action)
+            // East or West neighbor performs a dribble (to allow for move action)
             if (relativePos == EAST || relativePos == WEST) {
                 flags.north_dribble = isDribbleFromDirection(nState, Direction::NORTH);       // Neighbor cell (west or east - same line) performs a dribble north
                 flags.south_dribble = isDribbleFromDirection(nState, Direction::SOUTH);       // Neighbor cell (west or east - same line) performs a dribble south
+            }
+
+            // North of South neighbor has an obstacle (can intercept long pass)
+            if (relativePos == NORTH || relativePos == SOUTH) {
+                if (nState->has_obstacle) {
+                    flags.obstacle_interception = true;
+                }
+            }
+
+            // North or South or East or West Neighbor is an obstacle
+            if (relativePos == NORTH || relativePos == SOUTH || relativePos == EAST || relativePos == WEST) {
+                // if any direct neighbor has an obstacle, we toggle state flag to broadcast that we are near an obstacle
+                if (nState->has_obstacle) {
+                    state.near_obstacle = true;
+                }
+            }
+
+            if (relativePos == NORTH && nState->near_obstacle) { 
+                flags.near_north_obstacle = true;
+            }
+            else if (relativePos == WEST && nState->near_obstacle) {
+                flags.near_west_obstacle = true;
+            }
+            else if (relativePos == EAST && nState->near_obstacle) {
+                flags.near_east_obstacle = true;
+            }
+            else if (relativePos == SOUTH && nState->near_obstacle) {
+                flags.near_south_obstacle = true;
             }
         }
 
@@ -267,6 +303,7 @@ class player : public GridCell<playerState, double> {
         };
 
         auto resetAll = [&state]() {                // use lambda to capture reference to playerState
+            state.near_obstacle = false;
             state.mental = 50.0;
             state.fatigue = 0.0;
             state.action = Action::NONE;
@@ -283,12 +320,12 @@ class player : public GridCell<playerState, double> {
         // Perform Actions (Cell logic when having ball)
         //////////////////////////////////////////////////////////////
         if (state.has_player && state.has_ball) {
-            // Rule 1: Short pass to west or east teammate
+            // Rule 1: Short pass to west or east teammate not near an obstacle
             if (state.fatigue > 30.0 && state.fatigue < 70.0 && state.mental < 60.0) {
-                if (flags.east_teammate) {
+                if (flags.east_teammate && !flags.near_east_obstacle) {
                     applyShortPassActionPlusCost(Direction::EAST);
                 } 
-                else if (flags.west_teammate) {
+                else if (flags.west_teammate && !flags.near_west_obstacle) {
                     applyShortPassActionPlusCost(Direction::WEST);
                 }
                 else {
@@ -298,10 +335,10 @@ class player : public GridCell<playerState, double> {
             }
             // Rule 2: Long pass to north or south teammate (includes extended teammate)
             else if (state.fatigue > 25.0 && state.mental > 60.0 && state.mental < 70.0) {
-                if (flags.north_extended_teammate || flags.north_teammate) {
+                if ((flags.north_extended_teammate || flags.north_teammate) && !flags.obstacle_interception) {
                     applyLongPassActionPlusCost(Direction::NORTH);
                 }
-                else if (flags.south_extended_teammate || flags.south_teammate) {
+                else if ((flags.south_extended_teammate || flags.south_teammate) && !flags.obstacle_interception) {
                     applyLongPassActionPlusCost(Direction::SOUTH);
                 }
                 else {
@@ -352,7 +389,7 @@ class player : public GridCell<playerState, double> {
         //////////////////////////////////////////////////////////////
         // Receive Actions (Delayed Cell Neighbor Inputs)
         //////////////////////////////////////////////////////////////
-        if (!state.has_player && !state.has_ball) {     // empty cell
+        if (!state.has_player && !state.has_ball && !state.has_obstacle) {  // empty cell (no player, ball, or obstacle)
             // Case 1: Become a player w/ ball if south/north neighbor wants to dribble to your location
             if (flags.dribble_from_south || flags.dribble_from_north) {
                 applyBecomePlayerFromDribblePlusCost();
@@ -379,7 +416,7 @@ class player : public GridCell<playerState, double> {
         //////////////////////////////////////////////////////////////
         // Cleanup of cells that moved (action = dribble or move)
         //////////////////////////////////////////////////////////////
-        if (!state.has_player && !state.has_ball) {
+        if (!state.has_player && !state.has_ball && !state.has_obstacle) {
             // Only track cells that had actions
             if (state.action != Action::NONE) {
                 state.inactive_time += 1;

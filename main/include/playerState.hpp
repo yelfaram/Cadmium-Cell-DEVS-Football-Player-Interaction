@@ -10,6 +10,8 @@
 struct playerState {
     bool has_player;        // tracks whether there is a player on cell
     bool has_ball;          // tracks whether there is a ball on cell
+    bool has_obstacle;      // tracks whether there is a stationary obstacle on cell
+    bool near_obstacle;     // tracks whether cell is near an obstacle
     double mental;          // tracks player mental level [0, 100]  -> 100 indicates high confidence
     double fatigue;         // tracks player fatigue level [0, 100] -> 100 indicates high exhaustion
     Action action;          // tracks player performed actions
@@ -19,7 +21,9 @@ struct playerState {
     //! Default constructor function
     playerState(): 
         has_player(false), 
-        has_ball(false), 
+        has_ball(false),
+        has_obstacle(false),
+        near_obstacle(false),
         mental(50.0), 
         fatigue(0.0), 
         action(Action::NONE), 
@@ -29,8 +33,8 @@ struct playerState {
 
 //! It prints the state variables of the cell in an output stream
 std::ostream& operator<<(std::ostream& os, const playerState& x) {
-    // os << "{has_player: " << ((x.has_player) ? 1 : 0) << ", has_ball: " << ((x.has_ball) ? 1 : 0) << ", mental: " << x.mental << ", fatigue: " << x.fatigue << ", action: " << x.action << ", direction: " << x.direction << ", inactive_time: " << x.inactive_time << "}"; // use this output if you want clarity on the grid log csv file
-    os << "<" << ((x.has_player) ? 1 : 0) << "," << ((x.has_ball) ? 1 : 0) << "," << x.mental << "," << x.fatigue << "," << x.action << "," << x.direction << "," << x.inactive_time << ">";  // use this output when you need to use the Cell-DEVS viewer
+    os << "{has_player: " << ((x.has_player) ? 1 : 0) << ", has_ball: " << ((x.has_ball) ? 1 : 0) << ", has_obstacle: " << ((x.has_obstacle) ? 1 : 0) << ", near_obstacle: " << ((x.near_obstacle) ? 1 : 0) << ", mental: " << x.mental << ", fatigue: " << x.fatigue << ", action: " << x.action << ", direction: " << x.direction << ", inactive_time: " << x.inactive_time << "}"; // use this output if you want clarity on the grid log csv file
+    // os << "<" << ((x.has_player) ? 1 : 0) << "," << ((x.has_ball) ? 1 : 0) << "," << ((x.has_obstacle) ? 1 : 0) << "," << ((x.near_obstacle) ? 1 : 0) << "," << x.mental << "," << x.fatigue << "," << x.action << "," << x.direction << "," << x.inactive_time << ">";  // use this output when you need to use the Cell-DEVS viewer
     return os;
 }
 
@@ -39,6 +43,8 @@ bool operator!=(const playerState& x, const playerState& y) {
     return (
         (x.has_player != y.has_player) || 
         (x.has_ball != y.has_ball) || 
+        (x.has_obstacle != y.has_obstacle) || 
+        (x.near_obstacle != y.near_obstacle) || 
         (x.mental != y.mental) || 
         (x.fatigue != y.fatigue) || 
         (x.action != y.action) || 
@@ -55,6 +61,8 @@ bool operator<(const playerState& lhs, const playerState& rhs){
 void from_json(const nlohmann::json& j, playerState& s) {
     j.at("has_player").get_to(s.has_player);
     j.at("has_ball").get_to(s.has_ball);
+    j.at("has_obstacle").get_to(s.has_obstacle);
+    j.at("near_obstacle").get_to(s.near_obstacle);
     j.at("mental").get_to(s.mental);
     j.at("fatigue").get_to(s.fatigue);
 

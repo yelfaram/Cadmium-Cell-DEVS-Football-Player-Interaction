@@ -23,30 +23,56 @@ source build_sim.sh
 
 To test the entire simulation on a 10x10 grid, run:
 
+#### Without Obstacles
+
 ```sh
-./bin/football_player_interaction config/10x10_player_config.json
+./bin/football_player_interaction config/without_obstacles/10x10_player_config.json
 ```
+
+#### With Obstacles
 
 ## Testing Actions
 
 You can test each specific action (short pass, dribble, and long pass) by running the following:
 
+#### Without Obstacles
+
 - To test the short passing action on a 3x3 grid:
 
 ```sh
-./bin/football_player_interaction config/3x3_player_short_pass_config.json
+./bin/football_player_interaction config/without_obstacles/3x3_player_short_pass_config.json
 ```
 
 - To test the dribbling action on a 3x3 grid:
 
 ```sh
-./bin/football_player_interaction config/3x3_player_dribble_config.json
+./bin/football_player_interaction config/without_obstacles/3x3_player_dribble_config.json
 ```
 
 - To test the long passing action on a 3x3 grid:
 
 ```sh
-./bin/football_player_interaction config/3x3_player_long_pass_config.json
+./bin/football_player_interaction config/without_obstacles/3x3_player_long_pass_config.json
+```
+
+#### With Obstacles
+
+- To test the short passing action on a 3x3 grid:
+
+```sh
+./bin/football_player_interaction config/with_obstacles/3x3_player_short_pass_config.json
+```
+
+- To test the dribbling action on a 3x3 grid:
+
+```sh
+./bin/football_player_interaction config/with_obstacles/3x3_player_dribble_config.json
+```
+
+- To test the long passing action on a 3x3 grid:
+
+```sh
+./bin/football_player_interaction config/with_obstacles/3x3_player_long_pass_config.json
 ```
 
 ## Output Files .csv
