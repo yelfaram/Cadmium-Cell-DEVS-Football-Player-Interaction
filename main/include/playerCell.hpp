@@ -14,6 +14,8 @@ struct NeighborFlags {
     // check for empty
     bool north_empty = false;                   // check if north cell (i-1, j) empty   
     bool south_empty = false;                   // check if south cell (i+1, j) empty
+    bool east_empty = false;                    // check if east cell (i, j+1) empty
+    bool west_empty = false;                    // check if west cell (i, j-1) empty
 
     // check for obstacle
     bool obstacle_interception = false;         // check if north or south neighbors are obstacles (can intercept long pass)
@@ -43,6 +45,12 @@ struct NeighborFlags {
 
     bool dribble_from_north = false;            // flag for north cell wants to move south
     bool move_from_north = false;               // flag for north cell wants to move south
+
+    bool dribble_from_east = false;            // flag for east cell wants to move west
+    bool move_from_east = false;               // flag for east cell wants to move west
+
+    bool dribble_from_west = false;            // flag for west cell wants to move east
+    bool move_from_west = false;               // flag for west cell wants to move east
 
     bool short_pass_from_east = false;          // flag for east cell wants to short pass west
     bool short_pass_from_west = false;          // flag for west cell wants to short pass east  
@@ -147,16 +155,43 @@ class player : public GridCell<playerState, double> {
                 }
             }
             else if (relativePos == WEST) {
+                // check north cell emptiness (to dribble/move left)
+                flags.west_empty = isEmpty(nState);
+
                 // check for teammates in same line (left)
                 flags.west_teammate = isTeammate(nState);
                 // if my direct west neighbor has an action to short pass to east (me) then i should receive ball
                 flags.short_pass_from_west = isShortPassFromDirection(nState, Direction::EAST); // Neighbor cell performs a short pass
+
+                // record player action
+                flags.dribble_from_west = isDribbleFromDirection(nState, Direction::EAST); // West cell (i, j-1) wants to dribble right
+                flags.move_from_west = isMoveFromDirection(nState, Direction::EAST);       // West cell (i, j-1) wants to move right
+                // get source player metrics for inheritance by new cell
+                if (flags.dribble_from_west || flags.move_from_west) {
+                    source_mental = nState->mental;   
+                    source_fatigue = nState->fatigue;
+                    source_initial_row = nState->initial_row;
+                    source_zone_type = nState->zone_type;
+                }
             }
             else if (relativePos == EAST) {
+                // check north cell emptiness (to dribble/move left)
+                flags.east_empty = isEmpty(nState);
+
                 // check for teammates in same line (right)
                 flags.east_teammate = isTeammate(nState); 
                 // if my direct east neighbor has an action to short pass to west (me) then i should receive ball
                 flags.short_pass_from_east = isShortPassFromDirection(nState, Direction::WEST); // Neighbor cell performs a short pass
+
+                flags.dribble_from_east = isDribbleFromDirection(nState, Direction::WEST); // East cell (i, j+1) wants to dribble left
+                flags.move_from_east = isMoveFromDirection(nState, Direction::WEST);       // East cell (i, j+1) wants to move left
+                // get source player metrics for inheritance by new cell
+                if (flags.dribble_from_east || flags.move_from_east) {
+                    source_mental = nState->mental;   
+                    source_fatigue = nState->fatigue;
+                    source_initial_row = nState->initial_row;
+                    source_zone_type = nState->zone_type;
+                }
             }
             
             else if (relativePos == SOUTH) {
@@ -377,21 +412,61 @@ class player : public GridCell<playerState, double> {
 
         }
         else if (state.has_player && !state.has_ball) {
-            // Rule 5: Move north/south if possible when neighbor dribbles
+            // Rule 5: Off-ball movement
+            bool moved = false;
+            
+            // Move north/south if possible when neighbor dribbles
             if (state.fatigue < 40.0 && state.mental > 50.0) {
                 if (flags.north_empty && flags.north_dribble) {
                     applyMoveAction(Direction::NORTH);
+                    moved = true;
                 }
                 else if (flags.south_empty && flags.south_dribble) {
                     applyMoveAction(Direction::SOUTH);
+                    moved = true;
                 }
-                else {
-                    // Rule 4: Can't perform action
-                    resetActionAndDirection();
+            }
+            // if not possible to move, reposition defender if he is displaced
+            if (!moved && state.zone_type == ZoneType::DEFENSE) {
+                bool isDisplaced = currentId[0] != state.initial_row;
+
+                if (isDisplaced) {
+                    // Defender is above initial row => should move south
+                    if (flags.south_empty && currentId[0] < state.initial_row) {
+                        applyMoveAction(Direction::SOUTH);
+                        moved = true; 
+                    } 
+                    // Defender is below initial row => should move north
+                    else if (flags.north_empty && currentId[0] > state.initial_row) {
+                        applyMoveAction(Direction::NORTH); 
+                        moved = true;
+                    }
+                    // Try moving left since north/south not possible
+                    else if (flags.west_empty) {
+                        applyMoveAction(Direction::WEST);
+                        moved = true; 
+                    } 
+                    // Try moving right since north/south not possible
+                    else if (flags.east_empty) {
+                        applyMoveAction(Direction::EAST);
+                        moved = true; 
+                    } 
+                    // Try again to move toward original row
+                    else if (flags.south_empty && currentId[0] < state.initial_row) {
+                        applyMoveAction(Direction::SOUTH); 
+                        moved = true;
+                    } 
+                    else if (flags.north_empty && currentId[0] > state.initial_row) {
+                        applyMoveAction(Direction::NORTH); 
+                        moved = true;
+                    }
+                    else {
+                        resetActionAndDirection(); // No valid repositioning
+                    }
                 }
-            } 
+            }
             // Rule 6: Player Recovers Mental/Fatigue if he performs no actions
-            else {
+            if (!moved) {
                 applyMentalFatigueRecovery();
             }
         }
@@ -400,12 +475,12 @@ class player : public GridCell<playerState, double> {
         // Receive Actions (Delayed Cell Neighbor Inputs)
         //////////////////////////////////////////////////////////////
         if (!state.has_player && !state.has_ball && !state.has_obstacle) {  // empty cell (no player, ball, or obstacle)
-            // Case 1: Become a player w/ ball if south/north neighbor wants to dribble to your location
-            if (flags.dribble_from_south || flags.dribble_from_north) {
+            // Case 1: Become a player w/ ball if south/north/west/east neighbor wants to dribble to your location
+            if (flags.dribble_from_south || flags.dribble_from_north || flags.dribble_from_west || flags.dribble_from_east) {
                 applyBecomePlayerFromDribblePlusCost();
             }
-            // Case 2: Become a player w/o ball if west/east neighbor dribbles (move north/south with player dribbling)
-            else if (flags.move_from_south || flags.move_from_north) {
+            // Case 2: Become a player w/o ball if west/east neighbor dribbles (move north/south with player dribbling) or for off-ball movement
+            else if (flags.move_from_south || flags.move_from_north || flags.move_from_west || flags.move_from_east) {
                 applyBecomePlayerFromMovePlusCost();
             }
         }
