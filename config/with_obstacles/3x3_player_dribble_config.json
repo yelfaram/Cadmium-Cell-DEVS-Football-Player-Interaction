@@ -60,7 +60,7 @@
         "has_player": true,
         "has_ball": false,
         "has_obstacle": false,
-        "near_obstacle": false,
+        "near_obstacle": true,
         "mental": 80.0,
         "fatigue": 10.0,
         "action": 0,

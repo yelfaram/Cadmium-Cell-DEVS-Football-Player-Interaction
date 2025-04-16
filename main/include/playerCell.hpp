@@ -253,6 +253,7 @@ class player : public GridCell<playerState, double> {
                 }
             }
 
+            // Record if neighbors are near obstacles (for off-ball movement)
             if (relativePos == NORTH && nState->near_obstacle) { 
                 flags.near_north_obstacle = true;
             }
@@ -354,7 +355,6 @@ class player : public GridCell<playerState, double> {
         };
 
         auto resetAll = [&state]() {                // use lambda to capture reference to playerState
-            state.near_obstacle = false;
             state.mental = 50.0;
             state.fatigue = 0.0;
             state.action = Action::NONE;
@@ -420,19 +420,15 @@ class player : public GridCell<playerState, double> {
         else if (state.has_player && !state.has_ball) {
             // Rule 5: Off-ball movement
             bool moved = false;
-            
-            // Move north/south if possible when neighbor dribbles
-            if (state.fatigue < 40.0 && state.mental > 50.0) {
-                if (flags.north_empty && flags.north_dribble) {
-                    applyMoveAction(Direction::NORTH);
-                    moved = true;
-                }
-                else if (flags.south_empty && flags.south_dribble) {
-                    applyMoveAction(Direction::SOUTH);
-                    moved = true;
-                }
-            }
-            // if not possible to move, reposition defender if he is displaced
+
+            /*
+            Defenders: Off-ball movement is specific to tracking back. 
+                - Any defender who is out of position should attempt to return to their defensive line (initial_row)
+                - If by any chance original location is blocked by an obstacle, defender will drop back to original 
+                - Defenders will not be moving when detecting their neighbor dribbled
+
+                Goal: Hold defensive line 
+            */
             if (!moved && state.zone_type == ZoneType::DEFENSE) {
                 bool isDisplaced = currentId[0] != state.initial_row;
 
@@ -471,6 +467,77 @@ class player : public GridCell<playerState, double> {
                     }
                 }
             }
+            /*
+            Midfielders: Off-ball movement is specific to being open for a pass. 
+                - If detecting nearby neighbor dribbles, will move up/down the pitch too
+                - If midfielder didn't move but sees that he is near obstacle, will try to reposition himself
+                to an open cell (without obstacles)
+            */
+            else if (!moved && state.zone_type == ZoneType::MIDFIELD) {
+                // Move north/south if possible when neighbor dribbles (Follow neighbor movement)
+                if (state.fatigue < 40.0 && state.mental > 50.0) {
+                    if (flags.north_empty && flags.north_dribble) {
+                        applyMoveAction(Direction::NORTH);
+                        moved = true;
+                    }
+                    else if (flags.south_empty && flags.south_dribble) {
+                        applyMoveAction(Direction::SOUTH);
+                        moved = true;
+                    }
+                }
+
+                // Unable to move -> try reposititioning if near obstacle
+                if (!moved && state.near_obstacle) {
+                    // try moving left/right first to open space
+                    if (flags.west_empty && !flags.near_west_obstacle) {
+                        applyMoveAction(Direction::WEST);
+                        moved = true; 
+                    }
+                    else if (flags.east_empty && !flags.near_east_obstacle) {
+                        applyMoveAction(Direction::EAST);
+                        moved = true; 
+                    }
+                    // not successful, try moving up/down
+                    else if (flags.north_empty && !flags.near_north_obstacle) {
+                        applyMoveAction(Direction::NORTH);
+                        moved = true; 
+                    }
+                    else if (flags.south_empty && !flags.near_south_obstacle) {
+                        applyMoveAction(Direction::SOUTH);
+                        moved = true;
+                    }
+                }
+            }
+            /*
+            Attackers: Off-ball movement is tied to remaining forward and in open positions in attacking positions
+                - If they by any chance drifted backwards, track back to initial row (similar to defender repositioning)
+                - If there is an obstacle in front or cell in front is near obstacle, try to break away wide (move left-right)
+            */
+            else if (!moved && state.zone_type == ZoneType::ATTACK) {
+                // Attacker below his initial row => should move north
+                if (flags.north_empty && currentId[0] > state.initial_row) {
+                    applyMoveAction(Direction::NORTH);
+                    moved = true; 
+                }
+                // near an obstacle => try moving wide for a better attacking positioning
+                else if (flags.near_north_obstacle || flags.obstacle_interception_north) {
+                    // try move left or right first
+                    if (flags.west_empty) {
+                        applyMoveAction(Direction::WEST);
+                        moved = true; 
+                    }
+                    else if (flags.east_empty) {
+                        applyMoveAction(Direction::EAST);
+                        moved = true; 
+                    }
+                    // not possible -> drop back and try from there
+                    else if (flags.south_empty) {
+                        applyMoveAction(Direction::SOUTH); 
+                        moved = true;
+                    } 
+                }
+            }
+
             // Rule 6: Player Recovers Mental/Fatigue if he performs no actions
             if (!moved) {
                 applyMentalFatigueRecovery();

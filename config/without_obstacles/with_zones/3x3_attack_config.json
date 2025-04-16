@@ -21,55 +21,23 @@
         "initial_row": 0,
         "inactive_time": 0
       },
-      "neighborhood": [{ "type": "von_neumann", "range": 2 }]
+      "neighborhood": [{ "type": "von_neumann", "range": 1 }]
     },
     "player_1": {
       "state": {
         "has_player": true,
-        "has_ball": true,
-        "has_obstacle": false,
-        "near_obstacle": true,
-        "mental": 65.0,
-        "fatigue": 30.0,
-        "action": 0,
-        "direction": 0,
-        "zone_type": 0,
-        "initial_row": 2,
-        "inactive_time": 0
-      },
-      "cell_map": [[2, 1]]
-    },
-    "obstacle_1": {
-      "state": {
-        "has_player": false,
         "has_ball": false,
-        "has_obstacle": true,
+        "has_obstacle": false,
         "near_obstacle": false,
-        "mental": 50.0,
-        "fatigue": 0.0,
+        "mental": 80.0,
+        "fatigue": 10.0,
         "action": 0,
         "direction": 0,
-        "zone_type": 0,
+        "zone_type": 3,
         "initial_row": 0,
         "inactive_time": 0
       },
-      "cell_map": [[1, 1]]
-    },
-    "player_2": {
-      "state": {
-        "has_player": true,
-        "has_ball": false,
-        "has_obstacle": false,
-        "near_obstacle": true,
-        "mental": 65.0,
-        "fatigue": 30.0,
-        "action": 0,
-        "direction": 0,
-        "zone_type": 0,
-        "initial_row": 0,
-        "inactive_time": 0
-      },
-      "cell_map": [[0, 1]]
+      "cell_map": [[2, 0]]
     }
   },
   "viewer": [
