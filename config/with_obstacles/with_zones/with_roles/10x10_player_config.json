@@ -1,0 +1,347 @@
+{
+  "scenario": {
+    "shape": [10, 10],
+    "origin": [0, 0],
+    "wrapped": false
+  },
+  "cells": {
+    "default": {
+      "delay": "transport",
+      "model": "player",
+      "state": {
+        "has_player": false,
+        "has_ball": false,
+        "has_obstacle": false,
+        "near_obstacle": false,
+        "mental": 50.0,
+        "fatigue": 0.0,
+        "action": 0,
+        "direction": 0,
+        "zone_type": 0,
+        "player_role": 0,
+        "initial_row": 0,
+        "inactive_time": 0
+      },
+      "neighborhood": [{ "type": "von_neumann", "range": 2 }]
+    },
+    "player_1": {
+      "state": {
+        "has_player": true,
+        "has_ball": false,
+        "has_obstacle": false,
+        "near_obstacle": false,
+        "mental": 75.0,
+        "fatigue": 10.0,
+        "action": 0,
+        "direction": 0,
+        "zone_type": 1,
+        "player_role": 2,
+        "initial_row": 8,
+        "inactive_time": 0
+      },
+      "cell_map": [[8, 3]]
+    },
+    "player_2": {
+      "state": {
+        "has_player": true,
+        "has_ball": true,
+        "has_obstacle": false,
+        "near_obstacle": false,
+        "mental": 55.0,
+        "fatigue": 35.0,
+        "action": 0,
+        "direction": 0,
+        "zone_type": 1,
+        "player_role": 1,
+        "initial_row": 8,
+        "inactive_time": 0
+      },
+      "cell_map": [[8, 4]]
+    },
+    "player_3": {
+      "state": {
+        "has_player": true,
+        "has_ball": false,
+        "has_obstacle": false,
+        "near_obstacle": false,
+        "mental": 80.0,
+        "fatigue": 15.0,
+        "action": 0,
+        "direction": 0,
+        "zone_type": 1,
+        "player_role": 1,
+        "initial_row": 8,
+        "inactive_time": 0
+      },
+      "cell_map": [[8, 5]]
+    },
+    "player_4": {
+      "state": {
+        "has_player": true,
+        "has_ball": false,
+        "has_obstacle": false,
+        "near_obstacle": false,
+        "mental": 65.0,
+        "fatigue": 35.0,
+        "action": 0,
+        "direction": 0,
+        "zone_type": 1,
+        "player_role": 2,
+        "initial_row": 8,
+        "inactive_time": 0
+      },
+      "cell_map": [[8, 6]]
+    },
+
+    "player_5": {
+      "state": {
+        "has_player": true,
+        "has_ball": false,
+        "has_obstacle": false,
+        "near_obstacle": false,
+        "mental": 50.0,
+        "fatigue": 10.0,
+        "action": 0,
+        "direction": 0,
+        "zone_type": 2,
+        "player_role": 4,
+        "initial_row": 5,
+        "inactive_time": 0
+      },
+      "cell_map": [[5, 3]]
+    },
+    "player_6": {
+      "state": {
+        "has_player": true,
+        "has_ball": false,
+        "has_obstacle": false,
+        "near_obstacle": false,
+        "mental": 55.0,
+        "fatigue": 25.0,
+        "action": 0,
+        "direction": 0,
+        "zone_type": 2,
+        "player_role": 3,
+        "initial_row": 5,
+        "inactive_time": 0
+      },
+      "cell_map": [[5, 4]]
+    },
+    "player_7": {
+      "state": {
+        "has_player": true,
+        "has_ball": false,
+        "has_obstacle": false,
+        "near_obstacle": false,
+        "mental": 85.0,
+        "fatigue": 5.0,
+        "action": 0,
+        "direction": 0,
+        "zone_type": 2,
+        "player_role": 3,
+        "initial_row": 5,
+        "inactive_time": 0
+      },
+      "cell_map": [[5, 5]]
+    },
+    "player_8": {
+      "state": {
+        "has_player": true,
+        "has_ball": false,
+        "has_obstacle": false,
+        "near_obstacle": false,
+        "mental": 70.0,
+        "fatigue": 15.0,
+        "action": 0,
+        "direction": 0,
+        "zone_type": 2,
+        "player_role": 4,
+        "initial_row": 5,
+        "inactive_time": 0
+      },
+      "cell_map": [[5, 6]]
+    },
+    "player_9": {
+      "state": {
+        "has_player": true,
+        "has_ball": false,
+        "has_obstacle": false,
+        "near_obstacle": false,
+        "mental": 65.0,
+        "fatigue": 30.0,
+        "action": 0,
+        "direction": 0,
+        "zone_type": 3,
+        "player_role": 5,
+        "initial_row": 2,
+        "inactive_time": 0
+      },
+      "cell_map": [[2, 4]]
+    },
+    "player_10": {
+      "state": {
+        "has_player": true,
+        "has_ball": false,
+        "has_obstacle": false,
+        "near_obstacle": false,
+        "mental": 90.0,
+        "fatigue": 10.0,
+        "action": 0,
+        "direction": 0,
+        "zone_type": 3,
+        "player_role": 6,
+        "initial_row": 2,
+        "inactive_time": 0
+      },
+      "cell_map": [[2, 5]]
+    },
+    "obstacle_1": {
+      "state": {
+        "has_player": false,
+        "has_ball": false,
+        "has_obstacle": true,
+        "near_obstacle": false,
+        "mental": 50.0,
+        "fatigue": 0.0,
+        "action": 0,
+        "direction": 0,
+        "zone_type": 0,
+        "player_role": 0,
+        "initial_row": 4,
+        "inactive_time": 0
+      },
+      "cell_map": [[4, 4]]
+    },
+    "obstacle_2": {
+      "state": {
+        "has_player": false,
+        "has_ball": false,
+        "has_obstacle": true,
+        "near_obstacle": false,
+        "mental": 50.0,
+        "fatigue": 0.0,
+        "action": 0,
+        "direction": 0,
+        "zone_type": 0,
+        "player_role": 0,
+        "initial_row": 0,
+        "inactive_time": 0
+      },
+      "cell_map": [[4, 5]]
+    },
+    "obstacle_3": {
+      "state": {
+        "has_player": false,
+        "has_ball": false,
+        "has_obstacle": true,
+        "near_obstacle": false,
+        "mental": 50.0,
+        "fatigue": 0.0,
+        "action": 0,
+        "direction": 0,
+        "zone_type": 0,
+        "player_role": 0,
+        "initial_row": 0,
+        "inactive_time": 0
+      },
+      "cell_map": [[6, 4]]
+    },
+    "obstacle_4": {
+      "state": {
+        "has_player": false,
+        "has_ball": false,
+        "has_obstacle": true,
+        "near_obstacle": false,
+        "mental": 50.0,
+        "fatigue": 0.0,
+        "action": 0,
+        "direction": 0,
+        "zone_type": 0,
+        "player_role": 0,
+        "initial_row": 0,
+        "inactive_time": 0
+      },
+      "cell_map": [[1, 5]]
+    }
+  },
+  "viewer": [
+    {
+      "colors": [
+        [255, 255, 255],
+        [255, 0, 0]
+      ],
+      "breaks": [0, 0.5, 1],
+      "field": "has_player"
+    },
+    {
+      "colors": [
+        [255, 255, 255],
+        [0, 0, 255]
+      ],
+      "breaks": [0, 0.5, 1],
+      "field": "has_ball"
+    },
+    {
+      "colors": [
+        [255, 255, 255],
+        [0, 255, 0]
+      ],
+      "breaks": [0, 0.5, 1],
+      "field": "has_obstacle"
+    },
+    {
+      "colors": [
+        [255, 255, 255],
+        [0, 255, 255]
+      ],
+      "breaks": [0, 0.5, 1],
+      "field": "near_obstacle"
+    },
+    {
+      "colors": [
+        [0, 0, 0],
+        [128, 128, 128],
+        [255, 255, 0]
+      ],
+      "breaks": [0, 33, 66, 100],
+      "field": "mental"
+    },
+    {
+      "colors": [
+        [0, 0, 0],
+        [128, 128, 128],
+        [255, 255, 0]
+      ],
+      "breaks": [0, 33, 66, 100],
+      "field": "fatigue"
+    },
+    {
+      "colors": [[0, 0, 0]],
+      "breaks": [0, 1],
+      "field": "action"
+    },
+    {
+      "colors": [[0, 0, 0]],
+      "breaks": [0, 1],
+      "field": "direction"
+    },
+    {
+      "colors": [[0, 0, 0]],
+      "breaks": [0, 1],
+      "field": "zone_type"
+    },
+    {
+      "colors": [[0, 0, 0]],
+      "breaks": [0, 1],
+      "field": "player_role"
+    },
+    {
+      "colors": [
+        [0, 0, 0],
+        [255, 0, 0]
+      ],
+      "breaks": [0, 0.5, 1],
+      "field": "inactive_time"
+    }
+  ]
+}
