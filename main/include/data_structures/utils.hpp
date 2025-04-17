@@ -30,12 +30,24 @@ enum class ZoneType {
     ATTACK
 };
 
+enum class PlayerRole {
+    NONE,
+    CENTERBACK,
+    FULLBACK,
+    PLAYMAKER,
+    WINGER,
+    TARGET_FORWARD,
+    FALSE_NINE
+};
+
 istream& operator>>(istream& is, Action& action);
 istream& operator>>(istream& is, Direction& direction);
 istream& operator>>(istream& is, ZoneType& zone_type);
+istream& operator>>(istream& is, PlayerRole& player_role);
 
 ostream& operator<<(ostream& out, const Action& action);
 ostream& operator<<(ostream& out, const Direction& direction);
 ostream& operator<<(ostream& out, const ZoneType& zone_type);
+ostream& operator<<(ostream& out, const PlayerRole& player_role);
 
 #endif

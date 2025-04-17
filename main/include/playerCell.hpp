@@ -62,6 +62,25 @@ struct NeighborFlags {
     bool extended_long_pass_from_south = false; // flag for extended south cell wants to long pass north
 };
 
+struct PlayerRoleWeight {
+    double passWeight;
+    double dribbleWeight;
+
+    explicit PlayerRoleWeight(): passWeight(1.0), dribbleWeight(1.0) {}
+
+    PlayerRoleWeight(double p, double d): passWeight(p), dribbleWeight(d) {}
+};
+
+const std::unordered_map<PlayerRole, PlayerRoleWeight> playerRoleWeights = {
+    {PlayerRole::NONE,           {1.0, 1.0}},
+    {PlayerRole::CENTERBACK,     {1.3, 0.7}},
+    {PlayerRole::FULLBACK,       {0.9, 1.1}},
+    {PlayerRole::PLAYMAKER,      {1.4, 0.6}},
+    {PlayerRole::WINGER,         {0.6, 1.4}},
+    {PlayerRole::TARGET_FORWARD, {0.8, 1.2}},
+    {PlayerRole::FALSE_NINE,     {1.2, 0.8}}
+};
+
 //! Player cell
 class player : public GridCell<playerState, double> {
     private:
@@ -371,8 +390,16 @@ class player : public GridCell<playerState, double> {
         // Perform Actions (Cell logic when having ball)
         //////////////////////////////////////////////////////////////
         if (state.has_player && state.has_ball) {
+            auto weights = playerRoleWeights.at(state.player_role);
+
+            auto fatiguePass = state.fatigue * weights.passWeight;
+            auto mentalPass  = state.mental  * weights.passWeight;
+
+            auto fatigueDribble = state.fatigue * weights.dribbleWeight;
+            auto mentalDribble  = state.mental  * weights.dribbleWeight;
+
             // Rule 1: Short pass to west or east teammate not near an obstacle
-            if (state.fatigue > 30.0 && state.fatigue < 70.0 && state.mental < 60.0) {
+            if (fatiguePass > 30.0 && fatiguePass < 70.0 && mentalPass < 60.0) {
                 if (flags.east_teammate && !flags.near_east_obstacle) {
                     applyShortPassActionPlusCost(Direction::EAST);
                 } 
@@ -385,7 +412,7 @@ class player : public GridCell<playerState, double> {
                 }
             }
             // Rule 2: Long pass to north or south teammate (includes extended teammate)
-            else if (state.fatigue > 25.0 && state.mental > 60.0 && state.mental < 70.0) {
+            else if (fatiguePass > 25.0 && mentalPass > 60.0 && mentalPass < 70.0) {
                 if ((flags.north_extended_teammate || flags.north_teammate) && !flags.obstacle_interception_north) {
                     applyLongPassActionPlusCost(Direction::NORTH);
                 }
@@ -398,7 +425,7 @@ class player : public GridCell<playerState, double> {
                 }
             }
             // Rule 3: Dribble north/south if possible
-            else if (state.fatigue < 50.0 && state.mental >= 70.0) {
+            else if (fatigueDribble < 50.0 && mentalDribble >= 70.0) {
                 if (flags.north_empty) {
                     applyDribbleAction(Direction::NORTH);
                 }
@@ -472,6 +499,8 @@ class player : public GridCell<playerState, double> {
                 - If detecting nearby neighbor dribbles, will move up/down the pitch too
                 - If midfielder didn't move but sees that he is near obstacle, will try to reposition himself
                 to an open cell (without obstacles)
+
+                Goal: Remain as an open passing option
             */
             else if (!moved && state.zone_type == ZoneType::MIDFIELD) {
                 // Move north/south if possible when neighbor dribbles (Follow neighbor movement)
@@ -512,6 +541,8 @@ class player : public GridCell<playerState, double> {
             Attackers: Off-ball movement is tied to remaining forward and in open positions in attacking positions
                 - If they by any chance drifted backwards, track back to initial row (similar to defender repositioning)
                 - If there is an obstacle in front or cell in front is near obstacle, try to break away wide (move left-right)
+
+                Goal: Stay forward and be in good attacking positions
             */
             else if (!moved && state.zone_type == ZoneType::ATTACK) {
                 // Attacker below his initial row => should move north

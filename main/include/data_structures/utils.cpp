@@ -53,6 +53,23 @@ istream& operator>>(istream& is, ZoneType& zone_type) {
     return is;
 }
 
+istream& operator>>(istream& is, PlayerRole& player_role) {
+    int input;
+    is >> input;
+    
+    switch (input) {
+        case 0:  player_role = PlayerRole::NONE; break;
+        case 1:  player_role = PlayerRole::CENTERBACK; break;
+        case 2:  player_role = PlayerRole::FULLBACK; break;
+        case 3:  player_role = PlayerRole::PLAYMAKER; break;
+        case 4:  player_role = PlayerRole::WINGER; break;
+        case 5:  player_role = PlayerRole::TARGET_FORWARD; break;
+        case 6:  player_role = PlayerRole::FALSE_NINE; break;
+        default: player_role = PlayerRole::NONE; break;
+    }
+    return is;
+}
+
 /***************************************************/
 /************* Output stream ************************/
 /***************************************************/
@@ -87,6 +104,20 @@ ostream& operator<<(ostream &out, const ZoneType& zone_type) {
         case ZoneType::DEFENSE:  out << "DEFENSE"; break;
         case ZoneType::MIDFIELD: out << "MIDFIELD"; break;
         case ZoneType::ATTACK:   out << "ATTACK"; break;
+        default: out << "ERROR"; break;
+    }
+    return out;  
+}
+
+ostream& operator<<(ostream &out, const PlayerRole& player_role) {  
+    switch (player_role) {  
+        case PlayerRole::NONE:             out << "NONE"; break;  
+        case PlayerRole::CENTERBACK:       out << "CENTERBACK"; break;
+        case PlayerRole::FULLBACK:         out << "FULLBACK"; break;
+        case PlayerRole::PLAYMAKER:        out << "PLAYMAKER"; break;
+        case PlayerRole::WINGER:           out << "WINGER"; break;
+        case PlayerRole::TARGET_FORWARD:   out << "TARGET_FORWARD"; break;
+        case PlayerRole::FALSE_NINE:       out << "FALSE_NINE"; break;
         default: out << "ERROR"; break;
     }
     return out;  
