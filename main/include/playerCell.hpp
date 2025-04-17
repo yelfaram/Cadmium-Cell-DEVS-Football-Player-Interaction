@@ -392,14 +392,14 @@ class player : public GridCell<playerState, double> {
         if (state.has_player && state.has_ball) {
             auto weights = playerRoleWeights.at(state.player_role);
 
-            auto fatiguePass = state.fatigue * weights.passWeight;
-            auto mentalPass  = state.mental  * weights.passWeight;
+            auto fatiguePass = state.fatigue / weights.passWeight;
+            auto mentalPass  = state.mental  / weights.passWeight;
 
-            auto fatigueDribble = state.fatigue * weights.dribbleWeight;
-            auto mentalDribble  = state.mental  * weights.dribbleWeight;
+            auto fatigueDribble = state.fatigue / weights.dribbleWeight;
+            auto mentalDribble  = state.mental  / weights.dribbleWeight;
 
             // Rule 1: Short pass to west or east teammate not near an obstacle
-            if (fatiguePass > 30.0 && fatiguePass < 70.0 && mentalPass < 60.0) {
+            if (fatiguePass > 20.0 && fatiguePass < 65.0 && mentalPass < 65.0) {
                 if (flags.east_teammate && !flags.near_east_obstacle) {
                     applyShortPassActionPlusCost(Direction::EAST);
                 } 
@@ -411,8 +411,8 @@ class player : public GridCell<playerState, double> {
                     applyHoldActionPlusCost();
                 }
             }
-            // Rule 2: Long pass to north or south teammate (includes extended teammate)
-            else if (fatiguePass > 25.0 && mentalPass > 60.0 && mentalPass < 70.0) {
+            // Rule 2: Long pass to north or south teammate (includes extended teammate) - be wary of obstacle interception
+            else if (fatiguePass > 20.0 && mentalPass > 65.0 && mentalPass < 80.0) {
                 if ((flags.north_extended_teammate || flags.north_teammate) && !flags.obstacle_interception_north) {
                     applyLongPassActionPlusCost(Direction::NORTH);
                 }
@@ -425,7 +425,7 @@ class player : public GridCell<playerState, double> {
                 }
             }
             // Rule 3: Dribble north/south if possible
-            else if (fatigueDribble < 50.0 && mentalDribble >= 70.0) {
+            else if (fatigueDribble < 40.0 && mentalDribble >= 60.0) {
                 if (flags.north_empty) {
                     applyDribbleAction(Direction::NORTH);
                 }
