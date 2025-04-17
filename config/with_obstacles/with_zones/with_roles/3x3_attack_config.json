@@ -1,0 +1,132 @@
+{
+  "scenario": {
+    "shape": [3, 3],
+    "origin": [0, 0],
+    "wrapped": false
+  },
+  "cells": {
+    "default": {
+      "delay": "transport",
+      "model": "player",
+      "state": {
+        "has_player": false,
+        "has_ball": false,
+        "has_obstacle": false,
+        "near_obstacle": false,
+        "mental": 50.0,
+        "fatigue": 0.0,
+        "zone_type": 0,
+        "player_role": 0,
+        "initial_row": 0,
+        "inactive_time": 0
+      },
+      "neighborhood": [{ "type": "von_neumann", "range": 1 }]
+    },
+    "target_forward": {
+      "state": {
+        "has_player": true,
+        "has_ball": true,
+        "mental": 60.0,
+        "fatigue": 25.0,
+        "zone_type": 3,
+        "player_role": 5,
+        "initial_row": 0,
+        "inactive_time": 0
+      },
+      "cell_map": [[0, 1]]
+    },
+    "false_nine": {
+      "state": {
+        "has_player": true,
+        "has_ball": false,
+        "mental": 50.0,
+        "fatigue": 30.0,
+        "zone_type": 3,
+        "player_role": 6,
+        "initial_row": 0,
+        "inactive_time": 0
+      },
+      "cell_map": [[0, 2]]
+    }
+  },
+  "viewer": [
+    {
+      "colors": [
+        [255, 255, 255],
+        [255, 0, 0]
+      ],
+      "breaks": [0, 0.5, 1],
+      "field": "has_player"
+    },
+    {
+      "colors": [
+        [255, 255, 255],
+        [0, 0, 255]
+      ],
+      "breaks": [0, 0.5, 1],
+      "field": "has_ball"
+    },
+    {
+      "colors": [
+        [255, 255, 255],
+        [0, 255, 0]
+      ],
+      "breaks": [0, 0.5, 1],
+      "field": "has_obstacle"
+    },
+    {
+      "colors": [
+        [255, 255, 255],
+        [0, 255, 255]
+      ],
+      "breaks": [0, 0.5, 1],
+      "field": "near_obstacle"
+    },
+    {
+      "colors": [
+        [0, 0, 0],
+        [128, 128, 128],
+        [255, 255, 0]
+      ],
+      "breaks": [0, 33, 66, 100],
+      "field": "mental"
+    },
+    {
+      "colors": [
+        [0, 0, 0],
+        [128, 128, 128],
+        [255, 255, 0]
+      ],
+      "breaks": [0, 33, 66, 100],
+      "field": "fatigue"
+    },
+    {
+      "colors": [[0, 0, 0]],
+      "breaks": [0, 1],
+      "field": "action"
+    },
+    {
+      "colors": [[0, 0, 0]],
+      "breaks": [0, 1],
+      "field": "direction"
+    },
+    {
+      "colors": [[0, 0, 0]],
+      "breaks": [0, 1],
+      "field": "zone_type"
+    },
+    {
+      "colors": [[0, 0, 0]],
+      "breaks": [0, 1],
+      "field": "player_role"
+    },
+    {
+      "colors": [
+        [0, 0, 0],
+        [255, 0, 0]
+      ],
+      "breaks": [0, 0.5, 1],
+      "field": "inactive_time"
+    }
+  ]
+}

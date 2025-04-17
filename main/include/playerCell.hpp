@@ -412,7 +412,7 @@ class player : public GridCell<playerState, double> {
                 }
             }
             // Rule 2: Long pass to north or south teammate (includes extended teammate) - be wary of obstacle interception
-            else if (fatiguePass > 20.0 && mentalPass > 65.0 && mentalPass < 80.0) {
+            else if (fatiguePass > 20.0 && mentalPass > 65.0 && mentalPass <= 75.0) {
                 if ((flags.north_extended_teammate || flags.north_teammate) && !flags.obstacle_interception_north) {
                     applyLongPassActionPlusCost(Direction::NORTH);
                 }
