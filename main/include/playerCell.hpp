@@ -424,14 +424,20 @@ class player : public GridCell<playerState, double> {
                     applyHoldActionPlusCost();
                 }
             }
-            // Rule 3: Dribble north/south if possible
+            // Rule 3: Dribble north/east/south/west if possible
             else if (fatigueDribble < 40.0 && mentalDribble >= 60.0) {
                 if (flags.north_empty) {
                     applyDribbleAction(Direction::NORTH);
                 }
+                else if (flags.east_empty) {
+                    applyDribbleAction(Direction::EAST);
+                }
                 else if (flags.south_empty) {
                     applyDribbleAction(Direction::SOUTH);
                 }
+                else if (flags.west_empty) {
+                    applyDribbleAction(Direction::WEST);
+                } 
                 else {
                     // Rule 4: Can't perform action
                     applyHoldActionPlusCost();
@@ -447,6 +453,18 @@ class player : public GridCell<playerState, double> {
         else if (state.has_player && !state.has_ball) {
             // Rule 5: Off-ball movement
             bool moved = false;
+
+            // Move north/south if possible when neighbor dribbles (Follow neighbor movement)
+            if (state.fatigue < 40.0 && state.mental > 50.0) {
+                if (flags.north_empty && flags.north_dribble) {
+                    applyMoveAction(Direction::NORTH);
+                    moved = true;
+                }
+                else if (flags.south_empty && flags.south_dribble) {
+                    applyMoveAction(Direction::SOUTH);
+                    moved = true;
+                }
+            }
 
             /*
             Defenders: Off-ball movement is specific to tracking back. 
@@ -496,25 +514,12 @@ class player : public GridCell<playerState, double> {
             }
             /*
             Midfielders: Off-ball movement is specific to being open for a pass. 
-                - If detecting nearby neighbor dribbles, will move up/down the pitch too
                 - If midfielder didn't move but sees that he is near obstacle, will try to reposition himself
                 to an open cell (without obstacles)
 
                 Goal: Remain as an open passing option
             */
             else if (!moved && state.zone_type == ZoneType::MIDFIELD) {
-                // Move north/south if possible when neighbor dribbles (Follow neighbor movement)
-                if (state.fatigue < 40.0 && state.mental > 50.0) {
-                    if (flags.north_empty && flags.north_dribble) {
-                        applyMoveAction(Direction::NORTH);
-                        moved = true;
-                    }
-                    else if (flags.south_empty && flags.south_dribble) {
-                        applyMoveAction(Direction::SOUTH);
-                        moved = true;
-                    }
-                }
-
                 // Unable to move -> try reposititioning if near obstacle
                 if (!moved && state.near_obstacle) {
                     // try moving left/right first to open space
