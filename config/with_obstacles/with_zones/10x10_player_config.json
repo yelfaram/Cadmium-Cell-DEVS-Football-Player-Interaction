@@ -207,10 +207,10 @@
         "direction": 0,
         "zone_type": 0,
         "player_role": 0,
-        "initial_row": 4,
+        "initial_row": 0,
         "inactive_time": 0
       },
-      "cell_map": [[4, 4]]
+      "cell_map": [[4, 3]]
     },
     "obstacle_2": {
       "state": {
@@ -227,7 +227,7 @@
         "initial_row": 0,
         "inactive_time": 0
       },
-      "cell_map": [[4, 5]]
+      "cell_map": [[0, 6]]
     },
     "obstacle_3": {
       "state": {
@@ -244,7 +244,7 @@
         "initial_row": 0,
         "inactive_time": 0
       },
-      "cell_map": [[6, 4]]
+      "cell_map": [[6, 5]]
     },
     "obstacle_4": {
       "state": {
@@ -261,7 +261,7 @@
         "initial_row": 0,
         "inactive_time": 0
       },
-      "cell_map": [[1, 5]]
+      "cell_map": [[3, 5]]
     }
   },
   "viewer": [
@@ -334,6 +334,14 @@
       "colors": [[0, 0, 0]],
       "breaks": [0, 1],
       "field": "player_role"
+    },
+    {
+      "colors": [
+        [0, 0, 0],
+        [255, 0, 0]
+      ],
+      "breaks": [0, 0.5, 1],
+      "field": "initial_row"
     },
     {
       "colors": [

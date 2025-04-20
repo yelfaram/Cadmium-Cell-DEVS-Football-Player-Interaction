@@ -272,6 +272,14 @@
         [255, 0, 0]
       ],
       "breaks": [0, 0.5, 1],
+      "field": "initial_row"
+    },
+    {
+      "colors": [
+        [0, 0, 0],
+        [255, 0, 0]
+      ],
+      "breaks": [0, 0.5, 1],
       "field": "inactive_time"
     }
   ]
