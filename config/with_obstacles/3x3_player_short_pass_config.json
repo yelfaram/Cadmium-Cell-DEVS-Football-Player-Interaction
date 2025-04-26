@@ -46,7 +46,7 @@
         "has_player": true,
         "has_ball": false,
         "has_obstacle": false,
-        "near_obstacle": false,
+        "near_obstacle": true,
         "mental": 30.0,
         "fatigue": 35.0,
         "action": 0,
@@ -146,6 +146,14 @@
       "colors": [[0, 0, 0]],
       "breaks": [0, 1],
       "field": "player_role"
+    },
+    {
+      "colors": [
+        [0, 0, 0],
+        [255, 0, 0]
+      ],
+      "breaks": [0, 0.5, 1],
+      "field": "initial_row"
     },
     {
       "colors": [
